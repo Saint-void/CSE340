@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+<main class="page-shell categories-page">
+    <section class="page-intro">
+        <p class="eyebrow">Service Areas</p>
+        <h1><%= title %></h1>
+        <p>Browse the categories used to organize service projects across the network.</p>
+    </section>
+
+    <section class="categories-section" aria-labelledby="categories-heading">
+        <div class="section-heading">
+            <h2 id="categories-heading">Project Categories</h2>
+            <p><%= categories.length %> categories</p>
+        </div>
+
+        <% if (categories.length) { %>
+            <ul class="category-grid">
+                <% categories.forEach(category => { %>
+                    <li class="category-card">
+                        <h3><%= category.name %></h3>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p class="empty-state">No service project categories are available right now.</p>
+        <% } %>
+    </section>
+</main>
+<%- include('partials/footer') %>
