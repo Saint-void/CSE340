@@ -1,8 +1,33 @@
 <%- include('partials/header') %>
-<main>
-    <h1><%= title %></h1>
-        <li><img src="/images/brightfuture-logo.png" alt="Bright Future Logo"><strong>BrightFuture Builders</strong>: info@brightfuture.org</li>
-        <li><img src="/images/unityserve-logo.png" alt="Unity Serve Logo"><strong>UnityServe Volunteers</strong>: hello@unityserve.org</li>
-        <li><img src="/images/greenharvest-logo.png" alt="Green Harvest Logo"><strong>GreenHarvest Growers</strong>: contact@greenharvest.org</li>
+<main class="page-shell organizations-page">
+    <section class="page-intro">
+        <p class="eyebrow">Community Partners</p>
+        <h1><%= title %></h1>
+        <p>We are proud to collaborate with organizations that bring steady service, local care, and practical support to the community.</p>
+    </section>
+
+    <section class="organizations-section" aria-labelledby="organizations-heading">
+        <div class="section-heading">
+            <h2 id="organizations-heading">Partner Directory</h2>
+            <p><%= organizations.length %> active partners</p>
+        </div>
+
+        <% if (organizations.length) { %>
+            <ul class="organization-grid">
+                <% organizations.forEach(org => { %>
+                    <li class="organization-card">
+                        <img src="/images/<%= org.logo_filename %>" alt="<%= org.name %> Logo">
+                        <div class="organization-content">
+                            <h3><%= org.name %></h3>
+                            <p><%= org.description %></p>
+                            <a href="mailto:<%= org.contact_email %>"><%= org.contact_email %></a>
+                        </div>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p class="empty-state">No partner organizations are available right now.</p>
+        <% } %>
+    </section>
 </main>
 <%- include('partials/footer') %>
