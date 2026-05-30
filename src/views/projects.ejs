@@ -1,11 +1,42 @@
 <%- include('partials/header') %>
-<main>
-    <h1><%= title %></h1>
-        <h2>Upcoming Service Projects</h2>
-        <ul>
-            <li>Park Cleanup - Join us to clean up local parks and make them beautiful!</li>
-            <li>Food Drive - Help collect and distribute food to those in need.</li>
-            <li>Community Tutoring - Volunteer to tutor students in various subjects.</li>
+<% const projectCount = Array.isArray(projects) ? projects.length : 0; %>
+<main class="page-shell projects-page">
+    <section class="page-intro">
+        <p class="eyebrow">Volunteer Opportunities</p>
+        <h1><%= title %></h1>
+        <p>Find upcoming service projects supported by our partner organizations.</p>
+    </section>
+
+    <section class="projects-section" aria-labelledby="projects-heading">
+        <div class="section-heading">
+            <h2 id="projects-heading">Upcoming Service Projects</h2>
+            <p><%= projectCount %> active projects</p>
+        </div>
+
+        <% if (projectCount > 0) { %>
+        <ul class="project-grid">
+            <% projects.forEach(project => { %>
+                <% 
+                   const friendlyDate = new Date(project.date).toLocaleDateString('en-US', {
+                       year: 'numeric', 
+                       month: 'short', 
+                       day: 'numeric' 
+                   });
+                %>
+                <li class="project-card">
+                    <p class="project-date"><%= friendlyDate %></p>
+                    <h3><%= project.title %></h3>
+                    <p><%= project.description %></p>
+                    <div class="project-meta">
+                        <span><%= project.location %></span>
+                        <span><%= project.organization_name %></span>
+                    </div>
+                </li>
+            <% }); %>
         </ul>
+        <% } else { %>
+            <p class="empty-state">No service projects are available right now.</p>
+        <% } %>
+    </section>
 </main>
 <%- include('partials/footer') %>

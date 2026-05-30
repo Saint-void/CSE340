@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import path from 'path';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
+import { getAllProjects } from './src/models/projects.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,8 +34,16 @@ app.get('/organizations', async (req, res) => {
 });
 
 app.get('/projects', async (req, res) => {
-    const title = 'Service Projects';
-    res.render('projects', { title });
+    try {
+        const title = 'Service Projects';
+        const projectsList = await getAllProjects();
+        console.log("Fetched Projects:", projectsList);
+
+        res.render('projects', { title, projects: projectsList });
+    } catch (error) {
+        console.error('Error handling /projects route:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.listen(PORT, async () => {
