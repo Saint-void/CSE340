@@ -139,7 +139,8 @@ footer p {
 
 .organizations-section,
 .projects-section,
-.categories-section {
+.categories-section,
+.project-detail-section {
     padding: 28px;
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -233,6 +234,7 @@ footer p {
 }
 
 .project-card {
+    position: relative;
     display: grid;
     gap: 10px;
     min-height: 240px;
@@ -240,6 +242,27 @@ footer p {
     border: 1px solid var(--line);
     border-radius: 8px;
     background: #f8f8f9;
+}
+
+.project-card:hover,
+.project-card:focus-within {
+    border-color: var(--black);
+}
+
+.project-card-link {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+}
+
+.project-card-link:focus-visible {
+    outline: 3px solid var(--black);
+    outline-offset: 3px;
+}
+
+.project-card > :not(.project-card-link) {
+    position: relative;
+    z-index: 1;
 }
 
 .project-card p {
@@ -263,6 +286,65 @@ footer p {
     color: var(--steel);
     font-size: 0.92rem;
     font-weight: 700;
+}
+
+.project-meta a,
+.detail-list a {
+    color: var(--black);
+    font-weight: 800;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+
+.project-meta a {
+    width: max-content;
+    max-width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.project-meta a:hover,
+.project-meta a:focus-visible,
+.detail-list a:hover,
+.detail-list a:focus-visible {
+    color: var(--steel);
+}
+
+.detail-list {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+}
+
+.detail-list div {
+    display: grid;
+    gap: 4px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.detail-list div:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.detail-list dt {
+    color: var(--steel);
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.detail-list dd {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.linked-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding-left: 20px;
 }
 
 .category-grid {
@@ -304,7 +386,8 @@ footer p {
     .page-intro,
     .organizations-section,
     .projects-section,
-    .categories-section {
+    .categories-section,
+    .project-detail-section {
         padding: 22px;
     }
 

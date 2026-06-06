@@ -1,12 +1,23 @@
 import db from './db.js';
 
+const PROJECT_SELECT = `
+    SELECT
+        p.id AS project_id,
+        p.title,
+        p.description,
+        p.date,
+        p.location,
+        p.organization_id,
+        o.name AS organization_name
+    FROM public.project p
+    INNER JOIN public.organization o ON p.organization_id = o.organization_id
+`;
+
 const getAllProjects = async () => {
     try {
         // Use an inner join to merge project rows with their sponsoring organization names
         const query = `
-            SELECT p.id, p.title, p.description, p.location, p.date, o.name AS organization_name 
-            FROM public.project p
-            INNER JOIN public.organization o ON p.organization_id = o.organization_id
+            ${PROJECT_SELECT}
             ORDER BY p.date ASC;
         `;
         const result = await db.query(query);
@@ -17,4 +28,34 @@ const getAllProjects = async () => {
     }
 };
 
-export { getAllProjects };
+const getUpcomingProjects = async (number_of_projects) => {
+    try {
+        const query = `
+            ${PROJECT_SELECT}
+            WHERE p.date >= CURRENT_DATE
+            ORDER BY p.date ASC
+            LIMIT $1;
+        `;
+        const result = await db.query(query, [number_of_projects]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing getUpcomingProjects query:', error);
+        throw error;
+    }
+};
+
+const getProjectDetails = async (id) => {
+    try {
+        const query = `
+            ${PROJECT_SELECT}
+            WHERE p.id = $1;
+        `;
+        const result = await db.query(query, [id]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error executing getProjectDetails query:', error);
+        throw error;
+    }
+};
+
+export { getAllProjects, getUpcomingProjects, getProjectDetails };

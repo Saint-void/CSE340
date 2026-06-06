@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+<main class="page-shell organization-page">
+    <section class="page-intro">
+        <p class="eyebrow">Partner Organization</p>
+        <h1><%= organization.name %></h1>
+        <p><%= organization.description %></p>
+    </section>
+
+    <section class="project-detail-section" aria-labelledby="organization-detail-heading">
+        <div class="section-heading">
+            <h2 id="organization-detail-heading">Organization Details</h2>
+        </div>
+
+        <dl class="detail-list">
+            <div>
+                <dt>Contact Email</dt>
+                <dd><a href="mailto:<%= organization.contact_email %>"><%= organization.contact_email %></a></dd>
+            </div>
+            <div>
+                <dt>Service Projects</dt>
+                <dd>
+                    <% if (projects.length) { %>
+                        <ul class="linked-list">
+                            <% projects.forEach(project => { %>
+                                <li><a href="/project/<%= project.project_id %>"><%= project.title %></a></li>
+                            <% }); %>
+                        </ul>
+                    <% } else { %>
+                        No service projects are available for this organization.
+                    <% } %>
+                </dd>
+            </div>
+        </dl>
+    </section>
+</main>
+<%- include('partials/footer') %>
