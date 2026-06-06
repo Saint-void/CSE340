@@ -44,6 +44,28 @@ const getUpcomingProjects = async (number_of_projects) => {
     }
 };
 
+const getProjectsByOrganizationId = async (organizationId) => {
+    try {
+        const query = `
+            SELECT
+                id AS project_id,
+                organization_id,
+                title,
+                description,
+                location,
+                date
+            FROM public.project
+            WHERE organization_id = $1
+            ORDER BY date;
+        `;
+        const result = await db.query(query, [organizationId]);
+        return result.rows;
+    } catch (error) {
+        console.error('Error executing getProjectsByOrganizationId query:', error);
+        throw error;
+    }
+};
+
 const getProjectDetails = async (id) => {
     try {
         const query = `
@@ -58,4 +80,9 @@ const getProjectDetails = async (id) => {
     }
 };
 
-export { getAllProjects, getUpcomingProjects, getProjectDetails };
+export {
+    getAllProjects,
+    getUpcomingProjects,
+    getProjectsByOrganizationId,
+    getProjectDetails
+};

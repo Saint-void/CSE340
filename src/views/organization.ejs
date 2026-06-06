@@ -2,19 +2,25 @@
 <main class="page-shell organization-page">
     <section class="page-intro">
         <p class="eyebrow">Partner Organization</p>
-        <h1><%= organization.name %></h1>
-        <p><%= organization.description %></p>
+        <h1><%= title %></h1>
+        <p><%= organizationDetails.description %></p>
     </section>
 
     <section class="project-detail-section" aria-labelledby="organization-detail-heading">
         <div class="section-heading">
-            <h2 id="organization-detail-heading">Organization Details</h2>
+            <h2 id="organization-detail-heading"><%= organizationDetails.name %></h2>
         </div>
+
+        <img class="organization-detail-logo" src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> Logo">
 
         <dl class="detail-list">
             <div>
                 <dt>Contact Email</dt>
-                <dd><a href="mailto:<%= organization.contact_email %>"><%= organization.contact_email %></a></dd>
+                <dd><a href="mailto:<%= organizationDetails.contact_email %>"><%= organizationDetails.contact_email %></a></dd>
+            </div>
+            <div>
+                <dt>Description</dt>
+                <dd><%= organizationDetails.description %></dd>
             </div>
             <div>
                 <dt>Service Projects</dt>

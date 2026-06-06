@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<main class="page-shell category-page">
+    <section class="page-intro">
+        <p class="eyebrow">Service Area</p>
+        <h1><%= category.name %></h1>
+        <p>Service projects organized under this category.</p>
+    </section>
+
+    <section class="projects-section" aria-labelledby="category-projects-heading">
+        <div class="section-heading">
+            <h2 id="category-projects-heading">Service Projects</h2>
+            <p><%= projects.length %> projects</p>
+        </div>
+
+        <% if (projects.length) { %>
+            <ul class="linked-list project-link-list">
+                <% projects.forEach(project => { %>
+                    <li>
+                        <a href="/project/<%= project.project_id %>"><%= project.title %></a>
+                        <span><%= project.organization_name %></span>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p class="empty-state">No service projects are available for this category.</p>
+        <% } %>
+    </section>
+</main>
+<%- include('partials/footer') %>

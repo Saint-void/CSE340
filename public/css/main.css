@@ -215,6 +215,18 @@ footer p {
     color: var(--steel);
 }
 
+.organization-detail-logo {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 22px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+    object-fit: contain;
+    padding: 12px;
+}
+
 .empty-state {
     margin: 0;
     padding: 24px;
@@ -368,6 +380,59 @@ footer p {
 
 .category-card h3 {
     margin-bottom: 0;
+}
+
+.category-card a {
+    color: var(--black);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+
+.category-card a:hover,
+.category-card a:focus-visible {
+    color: var(--steel);
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tag-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #f8f8f9;
+    color: var(--black);
+    font-size: 0.92rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.tag-list a:hover,
+.tag-list a:focus-visible {
+    border-color: var(--black);
+    background: var(--black);
+    color: var(--white);
+    outline: none;
+}
+
+.project-link-list li {
+    display: grid;
+    gap: 2px;
+}
+
+.project-link-list span {
+    color: var(--steel);
+    font-size: 0.92rem;
+    font-weight: 700;
 }
 
 @media (max-width: 640px) {

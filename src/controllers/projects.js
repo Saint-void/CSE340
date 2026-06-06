@@ -1,36 +1,40 @@
 import { getProjectDetails, getUpcomingProjects } from '../models/projects.js';
+import { getCategoriesByProjectId } from '../models/categories.js';
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
-const showProjectsPage = async (req, res) => {
+const showProjectsPage = async (req, res, next) => {
     try {
         const title = 'Upcoming Service Projects';
         const projects = await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS);
 
         res.render('projects', { title, projects });
     } catch (error) {
-        console.error('Error handling /projects route:', error);
-        res.status(500).send('Internal Server Error');
+        next(error);
     }
 };
 
-const showProjectDetailsPage = async (req, res) => {
+const showProjectDetailsPage = async (req, res, next) => {
     try {
         const { id } = req.params;
         const project = await getProjectDetails(id);
 
         if (!project) {
-            res.status(404).send('Project not found');
+            const err = new Error('Project not found');
+            err.status = 404;
+            next(err);
             return;
         }
 
+        const categories = await getCategoriesByProjectId(id);
+
         res.render('project', {
             title: project.title,
-            project
+            project,
+            categories
         });
     } catch (error) {
-        console.error('Error handling /project/:id route:', error);
-        res.status(500).send('Internal Server Error');
+        next(error);
     }
 };
 

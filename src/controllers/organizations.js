@@ -1,26 +1,42 @@
-import { getOrganizationDetails, getOrganizationProjects } from '../models/organizations.js';
+import {
+    getAllOrganizations,
+    getOrganizationDetails
+} from '../models/organizations.js';
+import { getProjectsByOrganizationId } from '../models/projects.js';
 
-const showOrganizationDetailsPage = async (req, res) => {
+const showOrganizationsPage = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const organization = await getOrganizationDetails(id);
+        const organizations = await getAllOrganizations();
+        const title = 'Our Partner Organizations';
 
-        if (!organization) {
-            res.status(404).send('Organization not found');
-            return;
-        }
-
-        const projects = await getOrganizationProjects(id);
-
-        res.render('organization', {
-            title: organization.name,
-            organization,
-            projects
-        });
+        res.render('organizations', { title, organizations });
     } catch (error) {
-        console.error('Error handling /organization/:id route:', error);
-        res.status(500).send('Internal Server Error');
+        next(error);
     }
 };
 
-export { showOrganizationDetailsPage };
+const showOrganizationDetailsPage = async (req, res, next) => {
+    try {
+        const organizationId = req.params.id;
+        const organizationDetails = await getOrganizationDetails(organizationId);
+
+        if (!organizationDetails) {
+            const err = new Error('Organization not found');
+            err.status = 404;
+            next(err);
+            return;
+        }
+
+        const projects = await getProjectsByOrganizationId(organizationId);
+
+        res.render('organization', {
+            title: 'Organization Details',
+            organizationDetails,
+            projects
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { showOrganizationsPage, showOrganizationDetailsPage };
