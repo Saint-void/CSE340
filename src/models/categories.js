@@ -63,9 +63,103 @@ const getProjectsByCategoryId = async(categoryId) => {
     return result.rows;
 }
 
+const createCategory = async (name) => {
+    try {
+        const query = `
+            INSERT INTO public.category (name)
+            VALUES ($1)
+            RETURNING category_id;
+        `;
+
+        const result = await db.query(query, [name]);
+
+        if (result.rows.length === 0) {
+            throw new Error('Failed to create category');
+        }
+
+        return result.rows[0].category_id;
+    } catch (error) {
+        console.error('Error executing createCategory query:', error);
+        throw error;
+    }
+};
+
+const updateCategory = async (id, name) => {
+    try {
+        const query = `
+            UPDATE public.category
+            SET name = $1
+            WHERE category_id = $2
+            RETURNING category_id;
+        `;
+
+        const result = await db.query(query, [name, id]);
+
+        if (result.rows.length === 0) {
+            throw new Error('Failed to update category');
+        }
+
+        return result.rows[0].category_id;
+    } catch (error) {
+        console.error('Error executing updateCategory query:', error);
+        throw error;
+    }
+};
+
+/**
+ * Assign a category to a project by inserting into the join table.
+ * Not exported — used internally by updateCategoryAssignments.
+ */
+const assignCategoryToProject = async (projectId, categoryId) => {
+    try {
+        const query = `
+            INSERT INTO public.project_category (project_id, category_id)
+            VALUES ($1, $2);
+        `;
+
+        await db.query(query, [projectId, categoryId]);
+    } catch (error) {
+        console.error('Error executing assignCategoryToProject query:', error);
+        throw error;
+    }
+};
+
+/**
+ * Update the category assignments for a project.
+ * This removes existing assignments and then inserts the provided ones.
+ */
+const updateCategoryAssignments = async (projectId, categoryIds) => {
+    try {
+        // Delete existing assignments for the project
+        const deleteQuery = `
+            DELETE FROM public.project_category
+            WHERE project_id = $1;
+        `;
+
+        await db.query(deleteQuery, [projectId]);
+
+        // If no categories provided, we're done
+        if (!Array.isArray(categoryIds) || categoryIds.length === 0) {
+            return;
+        }
+
+        // Insert new assignments
+        for (const categoryId of categoryIds) {
+            await assignCategoryToProject(projectId, categoryId);
+        }
+    } catch (error) {
+        console.error('Error executing updateCategoryAssignments:', error);
+        throw error;
+    }
+};
+
 export {
     getAllCategories,
     getCategoryDetails,
     getCategoriesByProjectId,
     getProjectsByCategoryId
+    ,
+    createCategory,
+    updateCategory,
+    updateCategoryAssignments
 };

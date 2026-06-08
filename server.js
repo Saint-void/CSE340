@@ -77,7 +77,9 @@ app.use((err, req, res, next) => {
     const context = {
         title: status === 404 ? 'Page Not Found' : 'Server Error',
         error: err.message,
-        stack: err.stack
+        stack: err.stack,
+        flash: res.locals.flash, // Explicitly pass flash to the context
+        NODE_ENV: NODE_ENV
     };
 
     // Render the appropriate error template

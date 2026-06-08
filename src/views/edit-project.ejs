@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<div class="container mt-5">
+    <h1><%= title %></h1>
+
+    <% if (errors && errors.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+            <ul class="mb-0">
+                <% errors.forEach(error => { %>
+                    <li><%= error.msg %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% const projectDate = (formData.date && formData.date.length) ? formData.date : (project.date ? new Date(project.date).toISOString().slice(0,10) : '') %>
+
+    <form action="/edit-project/<%= project.project_id %>" method="POST">
+        <div class="mb-3">
+            <label for="organizationId" class="form-label">Organization</label>
+            <select class="form-select" id="organizationId" name="organizationId" required>
+                <option value="">Select an Organization</option>
+                <% organizations.forEach(org => { %>
+                    <option value="<%= org.organization_id %>" <%= (formData.organizationId ? (formData.organizationId == org.organization_id) : (project.organization_id == org.organization_id)) ? 'selected' : '' %>>
+                        <%= org.name %>
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">Project Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= formData.title || project.title || '' %>" required maxlength="200">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required maxlength="1000"><%= formData.description || project.description || '' %></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" name="location" value="<%= formData.location || project.location || '' %>" required maxlength="200">
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" name="date" value="<%= projectDate %>" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Project</button>
+        <a href="/project/<%= project.project_id %>" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

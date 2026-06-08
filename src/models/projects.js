@@ -95,10 +95,42 @@ const createProject = async (title, description, location, date, organizationId)
     }
 };
 
+const updateProject = async (id, title, description, location, date, organizationId) => {
+    try {
+        const query = `
+            UPDATE public.project
+            SET title = $1,
+                description = $2,
+                location = $3,
+                date = $4,
+                organization_id = $5
+            WHERE id = $6
+            RETURNING id;
+        `;
+
+        const params = [title, description, location, date, organizationId, id];
+        const result = await db.query(query, params);
+
+        if (result.rows.length === 0) {
+            throw new Error('Failed to update project');
+        }
+
+        if (process.env.ENABLE_SQL_LOGGING === 'true') {
+            console.log('Updated project with ID:', result.rows[0].id);
+        }
+
+        return result.rows[0].id;
+    } catch (error) {
+        console.error('Error executing updateProject query:', error);
+        throw error;
+    }
+};
+
 export {
     getAllProjects,
     getUpcomingProjects,
     getProjectsByOrganizationId,
     getProjectDetails,
-    createProject
+    createProject,
+    updateProject
 };

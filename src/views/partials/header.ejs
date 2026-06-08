@@ -16,7 +16,7 @@
         </ul>
     </nav>
 
-    <% const messages = flash(); %>
+    <% const messages = (typeof flash === 'function' ? flash() : {}); %>
     <% Object.keys(messages).forEach(type => { %>
         <% if (messages[type].length > 0) { %>
             <% messages[type].forEach(message => { %>

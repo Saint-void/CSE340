@@ -1,4 +1,4 @@
-import { getProjectDetails, getUpcomingProjects, createProject } from '../models/projects.js';
+import { getProjectDetails, getUpcomingProjects, createProject, updateProject } from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
@@ -62,7 +62,7 @@ const showProjectDetailsPage = async (req, res, next) => {
     }
 };
 
-export { showProjectsPage, showProjectDetailsPage };
+
 
 const showNewProjectForm = async (req, res, next) => {
     try {
@@ -98,10 +98,59 @@ const processNewProjectForm = async (req, res, next) => {
     }
 };
 
+const showEditProjectForm = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const project = await getProjectDetails(id);
+
+        if (!project) {
+            const err = new Error('Project not found');
+            err.status = 404;
+            next(err);
+            return;
+        }
+
+        const organizations = await getAllOrganizations();
+
+        res.render('edit-project', {
+            title: 'Edit Service Project',
+            project,
+            organizations,
+            errors: req.flash('errors'),
+            formData: req.flash('formData')[0] || {}
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const processEditProjectForm = async (req, res, next) => {
+    try {
+        const errors = validationResult(req);
+        const { id } = req.params;
+        if (!errors.isEmpty()) {
+            req.flash('errors', errors.array());
+            req.flash('formData', req.body);
+            return res.redirect(`/edit-project/${id}`);
+        }
+
+        const { organizationId, title, description, location, date } = req.body;
+
+        await updateProject(id, title, description, location, date, organizationId);
+
+        req.flash('success', 'Project updated successfully!');
+        res.redirect(`/project/${id}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export {
     showProjectsPage,
     showProjectDetailsPage,
     showNewProjectForm,
     processNewProjectForm,
+    showEditProjectForm,
+    processEditProjectForm,
     projectValidation
 };
