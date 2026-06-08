@@ -11,7 +11,16 @@ const __dirname = path.dirname(__filename);
 
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'development';
 const PORT = process.env.PORT || 3000;
-const SESSION_SECRET = process.env.SESSION_SECRET;
+let SESSION_SECRET = process.env.SESSION_SECRET;
+
+if (!SESSION_SECRET) {
+    if (NODE_ENV === 'production') {
+        throw new Error('SESSION_SECRET environment variable is required in production');
+    } else {
+        console.warn('Warning: SESSION_SECRET not set. Using insecure default for development.');
+        SESSION_SECRET = 'dev-secret';
+    }
+}
 
 const app = express();
 
