@@ -9,6 +9,7 @@
     <section class="project-detail-section" aria-labelledby="organization-detail-heading">
         <div class="section-heading">
             <h2 id="organization-detail-heading"><%= organizationDetails.name %></h2>
+            <a href="/edit-organization/<%= organizationDetails.organization_id %>">Edit</a>
         </div>
 
         <img class="organization-detail-logo" src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> Logo">
