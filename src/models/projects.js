@@ -80,9 +80,25 @@ const getProjectDetails = async (id) => {
     }
 };
 
+const createProject = async (title, description, location, date, organizationId) => {
+    try {
+        const query = `
+            INSERT INTO public.project (title, description, location, date, organization_id)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id;
+        `;
+        const result = await db.query(query, [title, description, location, date, organizationId]);
+        return result.rows[0].id;
+    } catch (error) {
+        console.error('Error executing createProject query:', error);
+        throw error;
+    }
+};
+
 export {
     getAllProjects,
     getUpcomingProjects,
     getProjectsByOrganizationId,
-    getProjectDetails
+    getProjectDetails,
+    createProject
 };
