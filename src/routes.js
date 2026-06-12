@@ -12,7 +12,7 @@ import {
     categoryValidation,
     
 } from './controllers/categories.js';
-import { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, requireRole, showDashboard } from './controllers/users.js';
+import { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, requireRole, showDashboard, showUsersPage } from './controllers/users.js';
 import { testErrorPage } from './controllers/errors.js';
 import {
     showOrganizationDetailsPage,
@@ -57,5 +57,7 @@ router.post('/login', processLoginForm);
 router.get('/logout', processLogout);
 // Protected dashboard route
 router.get('/dashboard', requireLogin, showDashboard);
+// Admin-only users listing
+router.get('/users', requireRole('admin'), showUsersPage);
 
 export default router;

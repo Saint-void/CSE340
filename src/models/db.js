@@ -1,4 +1,29 @@
 import { Pool } from 'pg';
+import fs from 'fs';
+import path from 'path';
+
+// Load .env into process.env if present (development convenience)
+try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+        const envData = fs.readFileSync(envPath, 'utf8');
+        envData.split(/\r?\n/).forEach(line => {
+            const m = line.match(/^\s*([^#][^=]*)=(.*)$/);
+            if (m) {
+                const key = m[1].trim();
+                let val = m[2].trim();
+                if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+                    val = val.slice(1, -1);
+                }
+                if (!process.env[key]) {
+                    process.env[key] = val;
+                }
+            }
+        });
+    }
+} catch (err) {
+    // ignore errors reading .env
+}
 
 /**
  * Connection pool for PostgreSQL database.

@@ -6,5 +6,10 @@
         <p><strong>Name:</strong> <%= name %></p>
         <p><strong>Email:</strong> <%= email %></p>
     </div>
+    <% if (user && user.role === 'admin') { %>
+        <div class="admin-links">
+            <a href="/users">Manage Users</a>
+        </div>
+    <% } %>
 </main>
 <%- include('partials/footer') %>

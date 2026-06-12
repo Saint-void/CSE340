@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -84,12 +84,19 @@ const requireLogin = (req, res, next) => {
 
 const requireRole = (roleName) => {
     return (req, res, next) => {
-        if (req.session && req.session.user && req.session.user.role === roleName) {
-            return next();
+        // If not logged in, ask user to login
+        if (!req.session || !req.session.user) {
+            req.flash('error', 'Please log in to access that page.');
+            return res.redirect('/login');
         }
 
-        req.flash('error', 'Access denied: insufficient privileges.');
-        res.redirect('/');
+        // If logged in but does not have required role, redirect to dashboard
+        if (req.session.user.role !== roleName) {
+            req.flash('error', 'Access denied: insufficient privileges.');
+            return res.redirect('/dashboard');
+        }
+
+        return next();
     };
 };
 
@@ -100,4 +107,13 @@ const showDashboard = (req, res) => {
     res.render('dashboard', { title: 'Dashboard', name, email });
 };
 
-export { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, requireRole, showDashboard };
+const showUsersPage = async (req, res, next) => {
+    try {
+        const users = await getAllUsers();
+        res.render('users', { title: 'Registered Users', users });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, requireRole, showDashboard, showUsersPage };

@@ -18,7 +18,10 @@
   "scripts": {
     "dev": "nodemon",
     "server": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "init-db": "node src/scripts/init-db.js"
+    ,
+    "seed-admin": "node src/scripts/seed-admin.js"
   },
   "dependencies": {
     "accepts": "^2.0.0",
