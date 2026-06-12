@@ -11,7 +11,9 @@
         <div class="section-heading">
             <h2 id="projects-heading">Upcoming Service Projects</h2>
             <p><%= projectCount %> active projects</p>
-            <a href="/new-project" class="btn btn-primary">Add New Project</a>
+            <% if (user && user.role === 'admin') { %>
+                <a href="/new-project" class="btn btn-primary">Add New Project</a>
+            <% } %>
         </div>
 
         <% if (projectCount > 0) { %>
